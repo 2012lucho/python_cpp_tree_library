@@ -1,5 +1,5 @@
 from ctypes import cdll
-lib = cdll.LoadLibrary('./libfoo.so')
+lib = cdll.LoadLibrary('./my_tree.so')
 
 class Foo(object):
     def __init__(self):

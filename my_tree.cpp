@@ -1,21 +1,17 @@
 #include <iostream>
 
+enum class byte : std::uint8_t {};
+
 // Estructura que se encargará de almacenar la información del nodo del arbol
 struct list_data {
     char *key;
-    bool *data;
-    char *data_type;
+    byte *data;
+    int  data_size;
     list_data *next = NULL;
 };
 
-class tree_data {
+class TreeData {
     list_data *data = NULL;
-// Crea un nuevo elemnto a ser añadido a la lista
-    list_data *new_element(){
-        list_data *element;
-
-        return element;
-    }
 //Obtiene el ultimo de la lista
     list_data *get_last(){
         list_data *current = this->data;
@@ -27,10 +23,7 @@ class tree_data {
 
     public:
 //Agrega un elemento a la lista
-        void set(){
-            list_data *element;
-            element = this->new_element();
-
+        void add( list_data *element ){
             if (this->data == NULL){
                 this->data = element;
             } else {
@@ -38,30 +31,77 @@ class tree_data {
                 last_element->next = element;
             }
         }
+//Busca un elemento en la lista
+        list_data *find( char key[] ){
+            list_data *current = this->data;
+            
+            if (current == NULL) return NULL;
 
+            while (true){
+                if (current->key == key) return current;
+                
+                if (current->next == NULL) return NULL;
+                
+                current = current->next;
+            }
+            return NULL;
+        }
+
+//Busca el elemento anterior al especificado
+        list_data *find_prev( char key[] ){
+            list_data *current = this->data;
+            
+            if (current == NULL) return NULL;
+
+            while (true){
+                if (current->next == NULL) return NULL;
+                
+                if (current->next->key == key){
+                    return current;
+                }
+                
+                current = current->next;
+            }
+            return NULL;
+        }
+
+//Quita un elemento de la lista 
         void unset( char key[] ){
-
+            list_data *prev = this->find_prev( key );
+            
+            if (prev == NULL) return;
+            
+            list_data *aux = prev->next;
+            list_data *sig = prev->next->next;
+            delete aux;
+            prev->next = sig;
         }
 };
 
 struct tree {
     int id;
-    tree_data data;
+    TreeData data;
     tree *left,*right;
 };
 
 class Foo{
     public:
         void bar(){
-            list_data test;
-            char key[] = "hola sdf";
-            int data_size = 20;
-            bool data[data_size];
-            data[2] = 1;
 
-            test.key = key;
-            test.data = data;
-            std::cout << test.data[2] << std::endl;
+            list_data *element;
+            byte data[4];
+            data[2] = (byte)45;
+
+            char key[] = "hola sdf";
+            element->key       = key;
+            element->data      = data;
+            element->data_size = 4;
+
+            tree arbol;
+            arbol.data.add( element );
+
+            list_data *encontrado = arbol.data.find( element->key );
+            std::cout << (int)encontrado->data[2] << std::endl;
         }
 };
  
