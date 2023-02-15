@@ -1,0 +1,6 @@
+.vscode
+dist
+build
+my_tree.egg-info
+my_tree.o
+my_tree.so
