@@ -1,12 +1,12 @@
 #include <iostream>
+#include <string.h>
 
-enum class byte : std::uint8_t {};
+using namespace std;
 
 // Estructura que se encargará de almacenar la información del nodo del arbol
 struct list_data {
-    char *key;
+    string key;
     byte *data;
-    int  data_size;
     list_data *next = NULL;
 };
 
@@ -32,7 +32,7 @@ class TreeData {
             }
         }
 //Busca un elemento en la lista
-        list_data *find( char key[] ){
+        list_data *find( string key ){
             list_data *current = this->data;
             
             if (current == NULL) return NULL;
@@ -48,7 +48,7 @@ class TreeData {
         }
 
 //Busca el elemento anterior al especificado
-        list_data *find_prev( char key[] ){
+        list_data *find_prev( string key ){
             list_data *current = this->data;
             
             if (current == NULL) return NULL;
@@ -66,7 +66,7 @@ class TreeData {
         }
 
 //Quita un elemento de la lista 
-        void unset( char key[] ){
+        void unset( string key ){
             list_data *prev = this->find_prev( key );
             
             if (prev == NULL) return;
@@ -78,34 +78,78 @@ class TreeData {
         }
 };
 
-struct tree {
+struct TreeNode {
     int id;
     TreeData data;
-    tree *left,*right;
+    TreeNode *left  = NULL;
+    TreeNode *right = NULL;
+};
+
+class Tree {
+    TreeNode *root = NULL;
+
+    public:
+        void add( TreeNode *node ){
+            if (this->root == NULL) {
+                this->root = node;
+                return;
+            }
+
+            TreeNode *current_node = this->root;
+            while(true){
+//Si es mayor
+                if (current_node->id > node->id) {
+                    if (current_node->right == NULL) {
+                        current_node->right = node;
+                        return;
+                    }
+                    current_node = current_node->right;
+//Si es menor
+                } else {
+                    if (current_node->left == NULL) {
+                        current_node->left = node;
+                        return;
+                    }
+                    current_node = current_node->left;
+                }
+            }
+        }
+
+        char *test( char* node ){
+            //std::cout << node << std::endl;
+            return node;
+        }
 };
 
 class Foo{
     public:
         void bar(){
-
-            list_data *element;
             byte data[4];
             data[2] = (byte)45;
 
-            char key[] = "hola sdf";
-            element->key       = key;
-            element->data      = data;
-            element->data_size = 4;
+            list_data *element, d;
+            element = &d;
+            (*element).key  = "hola sdf";
+            (*element).data = data;
+ 
+            TreeNode *arbol_node, refN;
+            arbol_node = &refN;
+            (*arbol_node).id = 50;
+            (*arbol_node).data.add( element );
 
-            tree arbol;
-            arbol.data.add( element );
+            Tree arbol;
+            arbol.add(arbol_node);
 
-            list_data *encontrado = arbol.data.find( element->key );
-            std::cout << (int)encontrado->data[2] << std::endl;
+            list_data *encontrado = arbol_node->data.find( element->key );
+            int date_e = (int)encontrado->data[2];
+            
+            std::cout << date_e << std::endl;
         }
 };
  
 extern "C" {
-    Foo* Foo_new(){ return new Foo(); }
-    void Foo_bar(Foo* foo){ foo->bar(); }
+    TreeNode* Tree_node_new(){ return new TreeNode(); }
+
+    Tree* Tree_new(){ return new Tree(); }
+    char *Tree_add(Tree* tree, char* test){ return tree->test( test ); }
 }

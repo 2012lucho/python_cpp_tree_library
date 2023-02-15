@@ -1,12 +1,20 @@
-from ctypes import cdll
+from ctypes import *
 lib = cdll.LoadLibrary('./my_tree.so')
 
-class Foo(object):
+class TreeNode(object):
     def __init__(self):
-        self.obj = lib.Foo_new()
+        self.obj = lib.Tree_node_new()
 
-    def bar(self):
-        lib.Foo_bar(self.obj)
+class Tree(object):
+    def __init__(self):
+        self.obj = lib.Tree_new()
 
-f = Foo()
-f.bar()
+    def add(self, test):
+        test = create_string_buffer(test)
+        lib.Tree_add.restype = c_char_p
+        s = lib.Tree_add(self.obj, test)
+        print (s)
+
+f = Tree()
+f.add(b"Prueba")
+
